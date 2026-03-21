@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediPredict | Diabetes Analytics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-heartbeat"></i>
+                <span>MediPredict</span>
+            </div>
+            <h1>Diabetes Analytics</h1>
+            <p>Advanced medical assessment & data visualization</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="prediction">
+                <i class="fas fa-stethoscope"></i> Prediction
+            </button>
+            <button class="tab-btn" data-tab="dashboard">
+                <i class="fas fa-chart-line"></i> Dashboard
+            </button>
+        </nav>
+
+        <main>
+            <div id="predictionTab" class="tab-content active">
+                <form id="predictionForm" class="prediction-card">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label for="pregnancies">Pregnancies</label>
+                            <input type="number" id="pregnancies" name="pregnancies" placeholder="e.g. 2" required>
+                            <small>Number of times pregnant</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="glucose">Glucose (mg/dL)</label>
+                            <input type="number" id="glucose" name="glucose" placeholder="e.g. 120" required>
+                            <small>Plasma glucose concentration</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="bloodPressure">Blood Pressure (mm Hg)</label>
+                            <input type="number" id="bloodPressure" name="bloodPressure" placeholder="e.g. 80" required>
+                            <small>Diastolic blood pressure</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="skinThickness">Skin Thickness (mm)</label>
+                            <input type="number" id="skinThickness" name="skinThickness" placeholder="e.g. 20" required>
+                            <small>Triceps skin fold thickness</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="insulin">Insulin (mu U/ml)</label>
+                            <input type="number" id="insulin" name="insulin" placeholder="e.g. 85" required>
+                            <small>2-Hour serum insulin</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="bmi">BMI</label>
+                            <input type="number" step="0.1" id="bmi" name="bmi" placeholder="e.g. 24.5" required>
+                            <small>Body mass index</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="dpf">Diabetes Pedigree Function</label>
+                            <input type="number" step="0.001" id="dpf" name="dpf" placeholder="e.g. 0.451" required>
+                            <small>Genetic risk score</small>
+                        </div>
+
+                        <div class="input-group">
+                            <label for="age">Age (years)</label>
+                            <input type="number" id="age" name="age" placeholder="e.g. 33" required>
+                            <small>Patient's current age</small>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" id="submitBtn">
+                            <span class="btn-text">Analyze Medical Data</span>
+                            <i class="fas fa-microscope"></i>
+                            <div class="loader" id="loader"></div>
+                        </button>
+                        <button type="reset" class="btn-secondary">Clear All</button>
+                    </div>
+                </form>
+
+                <div id="resultCard" class="result-card hidden">
+                    <div class="result-header">
+                        <h3>Analysis Result</h3>
+                    </div>
+                    <div class="result-content">
+                        <div id="predictionStatus" class="prediction-status"></div>
+                        <p id="predictionText"></p>
+
+                        <div class="analysis-sections">
+                            <div class="probability-container">
+                                <span>Risk Score:</span>
+                                <div class="progress-bar">
+                                    <div id="probFill" class="progress-fill"></div>
+                                </div>
+                                <span id="probValue"></span>
+                            </div>
+
+                            <div class="comparative-analysis">
+                                <h4><i class="fas fa-chart-radar"></i> Comparative Analysis</h4>
+                                <p>How your medical markers compare to the global dataset average.</p>
+                                <div class="chart-container">
+                                    <canvas id="radarChart"></canvas>
+                                </div>
+                            </div>
+
+                            <div id="medicalAdvice" class="medical-advice">
+                                <h4><i class="fas fa-user-md"></i> Medical Insights</h4>
+                                <ul id="adviceList"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> <!-- End Prediction Tab -->
+
+            <div id="dashboardTab" class="tab-content">
+                <div class="dashboard-advanced-grid">
+                    <!-- Column 1: Summary Cards -->
+                    <div class="dash-column summary-col">
+                        <div class="dashboard-card small-card">
+                            <span class="stat-label">Average Glucose</span>
+                            <span id="avgGlucose" class="stat-value highlight">-</span>
+                            <span class="stat-sub">mg/dL</span>
+                        </div>
+                        <div class="dashboard-card small-card">
+                            <span class="stat-label">Total Patients</span>
+                            <span id="totalRecords" class="stat-value highlight">-</span>
+                            <span class="stat-sub">Records Analyzed</span>
+                        </div>
+                    </div>
+
+                    <!-- Column 2: Patient Population -->
+                    <div class="dashboard-card chart-card">
+                        <h3>Patient Population</h3>
+                        <p class="chart-sub">Diabetic vs. Healthy Distribution</p>
+                        <div class="chart-container-large">
+                            <canvas id="populationChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Column 3: Glucose Indicator -->
+                    <div class="dashboard-card chart-card">
+                        <h3>Glucose Indicator</h3>
+                        <p class="chart-sub">Average Index by Outcome</p>
+                        <div class="chart-container-large">
+                            <canvas id="glucoseIndicatorChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Row 2, Col 1-2: Age Distribution -->
+                    <div class="dashboard-card chart-card wide-card">
+                        <h3>Age Distribution & Case Frequency</h3>
+                        <div class="chart-container-wide">
+                            <canvas id="ageDistributionChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Row 2, Col 3: Correlation Study -->
+                    <div class="dashboard-card chart-card">
+                        <h3>Correlation Study</h3>
+                        <p class="chart-sub">Impact of BMI & Glucose</p>
+                        <div class="chart-container-large">
+                            <canvas id="correlationChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2026 MediPredict Medical Analytics System. For research purposes only.</p>
+        </footer>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+
+</html>
