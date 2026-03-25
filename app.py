@@ -3,20 +3,18 @@ import pickle
 import numpy as np
 import pandas as pd
 import os
-import mysql.connector # Added for Database
+import mysql.connector 
 
 app = Flask(__name__)
 
-# --- DATABASE CONFIGURATION ---
 def get_db_connection():
     return mysql.connector.connect(
-        host="localhost",      # Change this to your AWS RDS endpoint later
-        user="root",           # Your MySQL username
-        password="root123", # Your MySQL password
-        database="healthcare_db" # The database name you created
+        host="localhost",      
+        user="root",           
+        password="root123", 
+        database="healthcare_db" 
     )
 
-# Load core files
 model_path = 'modelForPrediction.pickle'
 scaler_path = 'standardScalar.pickle'
 csv_path = 'diabetes.csv'
@@ -35,24 +33,19 @@ def index():
 
 @app.route('/api/stats')
 def get_stats():
-    # Fill any missing values with 0 so JSON doesn't break
+
     local_df = df.fillna(0)
 
-    # Outcome distribution
     outcome_counts = local_df['Outcome'].value_counts().to_dict()
 
-    # Glucose averages by outcome
     glucose_means = local_df.groupby('Outcome')['Glucose'].mean().to_dict()
 
-    # Age distribution
     age_counts = local_df['Age'].value_counts().sort_index().to_dict()
     age_labels = list(age_counts.keys())
     age_values = list(age_counts.values())
     
-    # Scatter data (BMI vs Glucose)
     scatter_data = local_df[['BMI', 'Glucose', 'Outcome']].to_dict(orient='records')
 
-    # FIXED: jsonify and the bracket must be on the same line!
     return jsonify({
         'success': True,
         'averages': local_df.mean().to_dict(),
@@ -92,11 +85,9 @@ def predict():
         scaled_features = scaler.transform(features_arr)
         prediction = model.predict(scaled_features)
         
-        # Result logic
         numeric_result = int(prediction[0])
         result_text = "Diabetic" if numeric_result == 1 else "Non-Diabetic"
         
-        # --- SAVE TO DATABASE ---
         try:
             conn = get_db_connection()
             cursor = conn.cursor()
@@ -111,7 +102,7 @@ def predict():
             cursor.close()
             conn.close()
         except Exception as db_err:
-            print(f"Database Error: {db_err}") # Don't stop the app if DB fails
+            print(f"Database Error: {db_err}")
 
         return jsonify({
             'success': True,
