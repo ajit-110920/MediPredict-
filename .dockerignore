@@ -1,0 +1,13 @@
+.git
+.gitignore
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.db
+.DS_Store
+Diabetes_EDA.ipynb
+.ipynb_checkpoints
+venv
+env
+.env
