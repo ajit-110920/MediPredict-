@@ -17,7 +17,7 @@ def get_db_connection():
 
 model_path = 'modelForPrediction.pickle'
 scaler_path = 'standardScalar.pickle'
-csv_path = 'diabetes.csv'
+csv_path = os.path.join('data', 'diabetes.csv')
 
 with open(model_path, 'rb') as f:
     model = pickle.load(f)
