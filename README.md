@@ -1,19 +1,17 @@
 # 🩺 MediPredict – Healthcare Predictive Analytics System
 
-A full-stack machine learning application that predicts diabetes risk using patient health data and provides real-time analytics through an interactive dashboard.
- ![Prediction UI](./screenshots/prediction_ui.png)
-
+A full-stack machine learning application that predicts diabetes risk and provides real-time analytics through an interactive dashboard. The system is deployed on AWS using Docker for scalable and consistent execution.
+![Prediction UI](./screenshots/prediction_ui.png)
 ---
 
 ## 🚀 Project Overview
 
-MediPredict is an end-to-end healthcare analytics system designed to:
+MediPredict is an end-to-end healthcare analytics system that integrates:
 
-* Predict whether a patient is likely to have diabetes
-* Provide data-driven insights using interactive dashboards
-* Store prediction history for future analysis
-
-This project integrates **Machine Learning, Web Development, Data Visualization, and Database Management** into a single system.
+* Machine Learning for disease prediction
+* Web development for user interaction
+* Data visualization for insights
+* Cloud deployment for real-world accessibility
 
 ---
 
@@ -22,7 +20,7 @@ This project integrates **Machine Learning, Web Development, Data Visualization,
 ### 🤖 AI Prediction Engine
 
 * Logistic Regression model trained on healthcare dataset
-* Real-time prediction via Flask API
+* Real-time predictions via Flask API
 * Probability-based classification with optimized threshold
 
 ### 📊 Analytics Dashboard
@@ -37,9 +35,9 @@ This project integrates **Machine Learning, Web Development, Data Visualization,
 
 ### 🗄️ Database Integration
 
-* MySQL database stores:
+* Stores:
 
-  * Patient inputs
+  * Patient input
   * Prediction results
   * Timestamp
 
@@ -47,24 +45,24 @@ This project integrates **Machine Learning, Web Development, Data Visualization,
 
 * Flask-based backend
 * HTML/CSS frontend
-* Interactive form for prediction
+* Interactive UI for prediction
+
+### ☁️ Cloud Deployment
+
+* Deployed on AWS EC2
+* Containerized using Docker
+* Publicly accessible via EC2 public IP
 
 ---
 
 ## 🏗️ System Architecture
 
-```
-User Input (Web UI)
-        ↓
-Flask API (Backend)
-        ↓
-ML Model (Logistic Regression)
-        ↓
-Prediction Output
-        ↓
-MySQL Database (Storage)
-        ↓
-Power BI Dashboard (Visualization)
+```id="arch1"
+User → Web UI → Flask API → ML Model → Prediction → Database → Dashboard
+                         ↓
+                      Docker Container
+                         ↓
+                    AWS EC2 Server
 ```
 
 ---
@@ -91,12 +89,13 @@ Power BI Dashboard (Visualization)
 
 ### 🔹 Database
 
-* MySQL
+* MySQL (optional / implemented if applicable)
 
-### 🔹 Tools
+### 🔹 DevOps
 
+* Docker
+* AWS EC2
 * Git & GitHub
-* VS Code
 
 ---
 
@@ -110,9 +109,9 @@ Power BI Dashboard (Visualization)
 
 * Handled missing values (0 → median)
 * Feature scaling using StandardScaler
-* Threshold tuning to improve recall (healthcare-focused)
+* Threshold tuning to improve recall
 
-### 📈 Final Performance
+### 📈 Model Performance
 
 | Metric    | Value |
 | --------- | ----- |
@@ -122,17 +121,15 @@ Power BI Dashboard (Visualization)
 | F1 Score  | ~0.66 |
 | AUC       | ~0.86 |
 
-👉 Model optimized for **higher recall** to reduce missed diabetic cases.
-
 ---
 
-## 📸 Other Screenshots
+## 📸 Project Screenshots
 
-### 🔹 1. Power BI Dashboard
+### 🔹 Power BI Dashboard
 
 ![Dashboard](./screenshots/dashboard.png)
 
-### 🔹 2. Database Records (MySQL)
+### 🔹 Database Records
 
 ![Database](./screenshots/database.png)
 
@@ -140,31 +137,31 @@ Power BI Dashboard (Visualization)
 
 ## 📂 Project Structure
 
-```
+```id="arch2"
 MediPredict/
 │
-├── app.py                      # Flask application
-├── modelForPrediction.pickle   # Trained ML model
-├── standardScalar.pickle       # Scaler
-├── diabetes.csv                # Dataset
-├── cleaned_data.csv            # Processed dataset
+├── app.py
+├── Dockerfile
 ├── requirements.txt
+├── modelForPrediction.pickle
+├── standardScalar.pickle
+├── diabetes.csv
+├── cleaned_diabetes_data.csv
 │
-├── templates/                  # HTML files
-├── static/                     # CSS/JS
-├── screenshots/                # Images for README
+├── templates/
+├── static/
+├── screenshots/
 │
 └── notebooks/
-    └── EDA_and_Model.ipynb
 ```
 
 ---
 
-## ⚙️ Setup Instructions
+## ⚙️ Setup Instructions (Local)
 
 ### 1️⃣ Clone Repository
 
-```bash
+```bash id="cmd1"
 git clone <your-repo-link>
 cd MediPredict
 ```
@@ -173,7 +170,7 @@ cd MediPredict
 
 ### 2️⃣ Create Virtual Environment
 
-```bash
+```bash id="cmd2"
 python -m venv venv
 venv\Scripts\activate
 ```
@@ -182,50 +179,64 @@ venv\Scripts\activate
 
 ### 3️⃣ Install Dependencies
 
-```bash
+```bash id="cmd3"
 pip install -r requirements.txt
 ```
 
 ---
 
-### 4️⃣ Setup Database (MySQL)
+### 4️⃣ Run Application
 
-```sql
-CREATE DATABASE healthcare_db;
-
-CREATE TABLE patient_predictions (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    pregnancies INT,
-    glucose FLOAT,
-    bmi FLOAT,
-    age INT,
-    outcome INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-```
-
----
-
-### 5️⃣ Run Application
-
-```bash
+```bash id="cmd4"
 python app.py
 ```
 
-Open in browser:
+Open:
 
-```
+```id="cmd5"
 http://127.0.0.1:5000/
 ```
 
 ---
 
-## 🧠 Key Insights from Analysis
+## 🐳 Docker Deployment
 
-* High glucose levels strongly indicate diabetes
+### Build Docker Image
+
+```bash id="cmd6"
+docker build -t medipredict .
+```
+
+### Run Container
+
+```bash id="cmd7"
+docker run -d -p 5000:5000 medipredict
+```
+
+---
+
+## ☁️ AWS Deployment (EC2)
+
+* Launched EC2 instance (Ubuntu, t2.micro)
+* Installed Docker
+* Cloned repository
+* Built and ran Docker container
+* Exposed port 5000
+
+Access app via:
+
+```id="cmd8"
+http://<EC2-Public-IP>:5000
+```
+
+---
+
+## 🧠 Key Insights
+
+* High glucose strongly correlates with diabetes
 * BMI > 30 significantly increases risk
-* Age contributes but is not a sole predictor
-* Combination of BMI + Glucose is highly predictive
+* Age contributes to risk but is not a sole factor
+* Combined features improve prediction accuracy
 
 ---
 
@@ -239,19 +250,19 @@ http://127.0.0.1:5000/
 
 ## 🎯 Future Improvements
 
-* Add multi-disease prediction (Heart, Liver, Kidney)
-* Deploy on AWS (EC2 + RDS)
-* Add authentication system
-* Improve model using advanced algorithms
+* Multi-disease prediction system
+* Model improvement (Random Forest, XGBoost)
+* Authentication system
+* Domain + HTTPS deployment
 
 ---
 
 ## 📌 Conclusion
 
-MediPredict demonstrates how machine learning can be integrated with web technologies and dashboards to build a real-world healthcare decision support system.
+MediPredict demonstrates a complete machine learning pipeline integrated with web technologies, cloud deployment, and data analytics — forming a real-world healthcare decision support system.
 
 ---
 
-## ⭐ If you like this project
+## ⭐ Support
 
-Give it a ⭐ on GitHub!
+If you like this project, give it a ⭐ on GitHub!
