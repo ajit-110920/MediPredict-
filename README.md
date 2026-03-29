@@ -1,7 +1,12 @@
 # 🩺 MediPredict – Healthcare Predictive Analytics System
 
 A full-stack machine learning application that predicts diabetes risk and provides real-time analytics through an interactive dashboard. The system is deployed on AWS using Docker for scalable and consistent execution.
+
 ![Prediction UI](./screenshots/prediction_ui.png)
+
+### 🌐 Live Demo
+👉 https://medipredict.me/
+
 ---
 
 ## 🚀 Project Overview
